@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tarea;
 use App\Http\Requests\StoreTareaRequest;
 use App\Http\Requests\UpdateTareaRequest;
+use App\Models\Tarea;
 
 class TareaController extends Controller
 {
@@ -18,6 +18,7 @@ class TareaController extends Controller
         //
 
         $r = Tarea::all();
+
         return response()->json($r);
     }
 
@@ -34,20 +35,22 @@ class TareaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTareaRequest  $request
+     * @param \App\Http\Requests\StoreTareaRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTareaRequest $request)
     {
         //
-        Tarea::where(['id'=>$request->id])->firstOrFail()->fill($request->only([$request->rules()]))->save();
-        return  Tarea::where(['id'=>$tarea->id])->firstOrNew();
+        $t = Tarea::where(['id' => $request->id])->firstOrFail();
+        $t->fill($request->all())->save();
+
+        return Tarea::where(['id' => $tarea->id])->firstOrNew();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tarea  $tarea
+     * @param \App\Models\Tarea $tarea
      * @return \Illuminate\Http\Response
      */
     public function show(Tarea $tarea)
@@ -58,47 +61,51 @@ class TareaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tarea  $tarea
+     * @param \App\Models\Tarea $tarea
      * @return \Illuminate\Http\Response
      */
     public function edit(Tarea $tarea)
     {
         //
+        $t =
 
-        Tarea::where(['id'=>$tarea->id])->firstOrFail()->fill($tarea)->save();
-        return  Tarea::where(['id'=>$tarea->id])->firstOrNew();
+            Tarea::where(['id' => $tarea->id])->firstOrFail();
+        $t->fill($tarea)->save();
+
+        return Tarea::where(['id' => $tarea->id])->firstOrNew();
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTareaRequest  $request
-     * @param  \App\Models\Tarea  $tarea
+     * @param \App\Http\Requests\UpdateTareaRequest $request
+     * @param \App\Models\Tarea $tarea
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTareaRequest $request, Tarea $tarea)
     {
         //
-        $t = Tarea::where(['id'=>$tarea->id])->firstOrFail();
-        $t->fill( $request->only([$request->rules()]));
-        if($request->input('completed') == 'true' || (Boolean)$request->input('completed')){
+        $t = Tarea::where(['id' => $tarea->id])->firstOrFail();
+        $t->fill($request->all());
+        if ($request->input('completed') == 'true' || (boolean) $request->input('completed')) {
             $t->completed = true;
         }
 
-            $t->save();
-        return  Tarea::where(['id'=>$tarea->id])->firstOrNew();
+        $t->save();
+
+        return Tarea::where(['id' => $tarea->id])->firstOrNew();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tarea  $tarea
+     * @param \App\Models\Tarea $tarea
      * @return \Illuminate\Http\Response
      */
     public function destroy(Tarea $tarea)
     {
         $t = Tarea::destroy($tarea->id);
-        return Tarea::where(['id'=>$tarea->id])->firstOrNew();
 
+        return Tarea::where(['id' => $tarea->id])->firstOrNew();
     }
 }
