@@ -62,7 +62,13 @@ const ListaTareas = () => {
 
     const handleSave = async (tarea: iTarea) => {
         // Actualizar la tarea en la API
-        await axiosService.put(`/tarea/${tarea.id}`, tarea);
+        if (tarea.id > 0){
+
+            await axiosService.put(`/tarea/${tarea.id}`, tarea);
+        }else{
+
+            await axiosService.post(`/tarea`, tarea);
+        }
 
         updateData();
 

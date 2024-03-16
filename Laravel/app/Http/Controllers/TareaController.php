@@ -41,10 +41,15 @@ class TareaController extends Controller
     public function store(StoreTareaRequest $request)
     {
         //
-        $t = Tarea::where(['id' => $request->id])->firstOrFail();
+        if( $request->id < 1){
+            $t = new Tarea();
+        }else{
+            $t = Tarea::where(['id' => $request->id])->firstOrNew();
+
+        }
         $t->fill($request->all())->save();
 
-        return Tarea::where(['id' => $tarea->id])->firstOrNew();
+        return $t;
     }
 
     /**
@@ -67,9 +72,12 @@ class TareaController extends Controller
     public function edit(Tarea $tarea)
     {
         //
-        $t =
+        if( $tarea->id < 1){
+            $t = new Tarea();
+        }else{
+            $t = Tarea::where(['id' =>$tarea->id])->firstOrNew();
 
-            Tarea::where(['id' => $tarea->id])->firstOrFail();
+        }
         $t->fill($tarea)->save();
 
         return Tarea::where(['id' => $tarea->id])->firstOrNew();
@@ -85,7 +93,13 @@ class TareaController extends Controller
     public function update(UpdateTareaRequest $request, Tarea $tarea)
     {
         //
-        $t = Tarea::where(['id' => $tarea->id])->firstOrFail();
+
+        if( $tarea->id < 1){
+            $t = new Tarea();
+        }else{
+            $t = Tarea::where(['id' =>$tarea->id])->firstOrNew();
+
+        }
         $t->fill($request->all());
         if ($request->input('completed') == 'true' || (boolean) $request->input('completed')) {
             $t->completed = true;
