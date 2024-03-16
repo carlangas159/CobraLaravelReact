@@ -5,7 +5,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import React, {useEffect, useState} from "react";
 import Login from "./components/Login.tsx";
 function App() {
-    const [user, setUser] = useState({email:"",password:"",token:""});
+    const [user, setUser] = useState({email:"demo@demo.com",password:"demo",token:""});
     const checkUser = () => {
         let o = localStorage.getItem('token')??"";
         if (o === "undefined") o ="";
@@ -34,11 +34,9 @@ function App() {
   return (
     <>
         <div>
-            <h1>App Tareas</h1>
-            <p>Aquí se mostrarán las tareas.</p>
             { user!== undefined && user.token && user.token.length>3  ? (
 
-            <ListaTareas/>
+            <ListaTareas user={user}/>
             ) : (
                 <div className="container">
                     <Login user={user} checkUser={checkUser} setUser={setUser} readUser={readUser}/>
