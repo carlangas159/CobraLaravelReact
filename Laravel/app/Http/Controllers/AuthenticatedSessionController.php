@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
      *
      * @param LoginRequest $request
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function apiStore(LoginRequest $request)
     {
@@ -30,8 +30,11 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
+
         $user = User::where('email', $request->email)->first();
-        return response($user);
+        $user->token = auth()->user()->createToken('authToken')->plainTextToken;
+
+        return response()->json($user);
     }
 
     /**

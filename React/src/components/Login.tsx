@@ -1,120 +1,86 @@
 ﻿import React, {useEffect, useState} from 'react';
-import DetalleTarea from "./DetalleTarea.tsx";
 
-
-import axios from "axios";
-import {iTarea, Tarea} from "../storage/Tareas.tsx";
 import 'jquery/dist/jquery.min.js';
+import axios from "axios";
+import {axiosService, removeLog} from "../axiosService.tsx";
 
 //Datatable Modules
-import "datatables.net-dt/js/dataTables.dataTables"
-import "datatables.net-dt/css/dataTables.dataTables.min.css"
-import $ from 'jquery';
 
-let dts = undefined;
-const ListaTareas = () => {
-    const [tareas, setTareas] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
+const Login = ({user, setUser,checkUser,readUser}) => {
+    // const [user, setUser] = useState((new User()));
 
-    const updateData =  async () => {
-        const response = await axios.get('http://127.0.0.1:8000/api/tarea');
-        setTareas(response.data);
-    };
+    const [email, setEmail] = useState(user!==null ? user.email:"");
+    const [password, setPassword] = useState(user!==null ? user.password:"");
+    
     useEffect(() => {
-        updateData();
-
-        $(document).ready(function () {
-            dts = $('#tblTareas').DataTable();
-
-        });
     }, []);
 
-    const handleDelete = async (id: number) => {
-        // Eliminar la tarea de la API
-        await axios.delete(`http://127.0.0.1:8000/api/tarea/${id}`);
-        updateData();
+    const handleSave = async (e) => {
+        e.preventDefault();
+
+        await axios.post(`http://localhost:8000/api/login`, {
+            'email':email,
+            'password':password,
+        })
+            .then(r =>{
+                let t = r.data;
+                console.error(t)
+                localStorage.setItem('user',JSON.stringify(t))
+                localStorage.setItem('token',JSON.stringify(t.token));
+                 getSanctum();
+
+            }).catch(er =>{
+                let r = er.response
+                removeLog();
+                try {
+                    alert(r.data.message)
+                }
+                catch (erw) {
+                    // do not
+                }
+        });
 
 
     };
+    const getSanctum = async ()=>{
+        axiosService.defaults.headers = {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        }
+        const response = await axiosService.get('http://localhost:8000/sanctum/csrf-cookie');
+        console.error(response)
+        localStorage.setItem('XSRF-TOKEN', response.data.csrf_token)
 
-    const handleNewOpenModal = () => {
-        setShowModal(true);
-        setTareaSeleccionada(null);
+        axiosService.defaults.headers = {
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            'X-XSRF-TOKEN': localStorage.getItem('XSRF-TOKEN'),
+        }
+        readUser();
+    }
 
-    };
-
-    const handleOpenModal = (tarea: iTarea) => {
-        setShowModal(true);
-        setTareaSeleccionada(tarea);
-
-    };
-
-    const handleSave = async (tarea: iTarea) => {
-        // Actualizar la tarea en la API
-        await axios.put(`http://127.0.0.1:8000/api/tarea/${tarea.id}`, tarea);
-
-        updateData();
-
-        // Cerrar el modal
-        setShowModal(false);
-
-    };
 
     return (
         <div className="MainDiv">
 
             <div className="container">
-                <button className="btn btn-primary" onClick={() => handleNewOpenModal()}>Nuevo</button>
+                    <form onSubmit={handleSave} >
+
+
+                    <label htmlFor="title">Correo:</label>
+                    <input className="form-control" type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                    <br/>
+                    <label htmlFor="password">Password:</label>
+                    <input className="form-control" type="password" id="password" value={password}
+                           onChange={(e) => setPassword(e.target.value)} required/>
+                    <br/>
+                    <button type="submit" className="btn btn-secondary">Guardar</button>
 
 
 
-                <table id="tblTareas" className="table table-hover table-bordered">
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Titulo</th>
-                        <th>Descripcion</th>
-                        <th>Completado</th>
-                        <th>Accion</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {tareas && tareas.length > 0 ? (
-
-                        tareas.map((item: iTarea) => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.title}</td>
-                                <td>{item.description}</td>
-                                <td>{item.completed?'SI':'NO'}</td>
-                                <td>
-                                    <button className="btn btn-secondary" onClick={() => handleOpenModal(item)}>Editar</button>
-                                    <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Eliminar</button>
-                                </td>
-                            </tr>
-
-
-                        ))
-                    ) : (
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        </tr>
-
-                    )}
-
-                    </tbody>
-                </table>
-                {showModal && <DetalleTarea showModal={showModal} tarea={tareaSeleccionada} onSave={handleSave} onShowModal={setShowModal}  />}
+                </form>
+                
             </div>
         </div>
     );
 };
 
-export default ListaTareas;
+export default Login;

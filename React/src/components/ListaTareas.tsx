@@ -2,37 +2,43 @@
 import DetalleTarea from "./DetalleTarea.tsx";
 
 
-import axios from "axios";
-import {iTarea, Tarea} from "../storage/Tareas.tsx";
+import {iTarea} from "../storage/Tareas.tsx";
 import 'jquery/dist/jquery.min.js';
 
 //Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables"
 import "datatables.net-dt/css/dataTables.dataTables.min.css"
 import $ from 'jquery';
+import {axiosService, removeLog} from "../axiosService.tsx";
 
-let dts = undefined;
 const ListaTareas = () => {
     const [tareas, setTareas] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
 
-    const updateData =  async () => {
-        const response = await axios.get('http://127.0.0.1:8000/api/tarea');
-        setTareas(response.data);
+
+    const updateData = () => {
+        axiosService.get('/tarea')
+            .then((response) => {
+                setTareas(response.data);
+
+            }).catch(err => {
+            removeLog();
+        })
+        ;
     };
     useEffect(() => {
         updateData();
 
         $(document).ready(function () {
-            dts = $('#tblTareas').DataTable();
+            $('#tblTareas').DataTable();
 
         });
     }, []);
 
     const handleDelete = async (id: number) => {
         // Eliminar la tarea de la API
-        await axios.delete(`http://127.0.0.1:8000/api/tarea/${id}`);
+        await axiosService.delete(`/tarea/${id}`,);
         updateData();
 
 
@@ -52,7 +58,7 @@ const ListaTareas = () => {
 
     const handleSave = async (tarea: iTarea) => {
         // Actualizar la tarea en la API
-        await axios.put(`http://127.0.0.1:8000/api/tarea/${tarea.id}`, tarea);
+        await axiosService.put(`/tarea/${tarea.id}`, tarea);
 
         updateData();
 
@@ -63,10 +69,9 @@ const ListaTareas = () => {
 
     return (
         <div className="MainDiv">
-
             <div className="container">
-                <button className="btn btn-primary" onClick={() => handleNewOpenModal()}>Nuevo</button>
 
+                <button className="btn btn-primary" onClick={() => handleNewOpenModal()}>Nuevo</button>
 
 
                 <table id="tblTareas" className="table table-hover table-bordered">
@@ -88,10 +93,14 @@ const ListaTareas = () => {
                                 <td>{item.id}</td>
                                 <td>{item.title}</td>
                                 <td>{item.description}</td>
-                                <td>{item.completed?'SI':'NO'}</td>
+                                <td>{item.completed ? 'SI' : 'NO'}</td>
                                 <td>
-                                    <button className="btn btn-secondary" onClick={() => handleOpenModal(item)}>Editar</button>
-                                    <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Eliminar</button>
+                                    <button className="btn btn-secondary"
+                                            onClick={() => handleOpenModal(item)}>Editar
+                                    </button>
+                                    <button className="btn btn-danger"
+                                            onClick={() => handleDelete(item.id)}>Eliminar
+                                    </button>
                                 </td>
                             </tr>
 
@@ -111,8 +120,11 @@ const ListaTareas = () => {
 
                     </tbody>
                 </table>
-                {showModal && <DetalleTarea showModal={showModal} tarea={tareaSeleccionada} onSave={handleSave} onShowModal={setShowModal}  />}
+                {showModal && <DetalleTarea showModal={showModal} tarea={tareaSeleccionada} onSave={handleSave}
+                                            onShowModal={setShowModal}/>}
             </div>
+
+
         </div>
     );
 };

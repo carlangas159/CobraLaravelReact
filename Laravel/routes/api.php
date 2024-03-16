@@ -21,6 +21,7 @@ Route::post('/verify_token', [AuthenticatedSessionController::class, 'apiVerifyT
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
     Route::resource('tarea', TareaController::class)->only([
                                                                'index',
                                                                'update',
@@ -29,5 +30,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
                                                                'edit',
 
                                                            ]);
-    Route::post('tarea/updat',[TareaController::class,'update']);
 
