@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "8c8baa2f-b5e9-4129-9ca6-d3d34040e57b",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33659487"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/api/login?email=demo@demo.com&password=demo",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "demo@demo.com"
+						},
+						{
+							"key": "password",
+							"value": "demo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/api/tarea",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"tarea"
+					]
+				},
+				"description": "Listado de tareas"
+			},
+			"response": []
+		},
+		{
+			"name": "Nueva Tarea",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 0,\r\n    \"title\": \"fghujk\",\r\n    \"description\": \"hjghgh\",\r\n    \"completed\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/tarea",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"tarea"
+					]
+				},
+				"description": "Listado de tareas"
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Tarea",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"title\": \"87e45edc5bd01fa29b834a61ed5e1885\",\r\n    \"description\": \"7e87c459edc0bce995dca708c0736f17\",\r\n    \"completed\": false,\r\n    \"created_at\": \"2024-03-16T14:08:59.000000Z\",\r\n    \"updated_at\": \"2024-03-16T14:08:59.000000Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/tarea/2",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"tarea",
+						"2"
+					]
+				},
+				"description": "Listado de tareas"
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar Tarea",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/tarea/3",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"tarea",
+						"3"
+					]
+				},
+				"description": "Listado de tareas"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

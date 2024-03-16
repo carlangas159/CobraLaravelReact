@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 
 import 'jquery/dist/jquery.min.js';
 import axios from "axios";
-import {axiosService, removeLog} from "../axiosService.tsx";
+import axiosService, {removeLog} from "../axiosService.tsx";
 
 //Datatable Modules
 
@@ -11,8 +11,8 @@ import {axiosService, removeLog} from "../axiosService.tsx";
 const Login = ({user, setUser,checkUser,readUser}) => {
     // const [user, setUser] = useState((new User()));
 
-    const [email, setEmail] = useState(user!==null ? user.email:"");
-    const [password, setPassword] = useState(user!==null ? user.password:"");
+    const [email, setEmail] = useState(user!==null ? user.email:"demo@demo.com");
+    const [password, setPassword] = useState(user!==null ? user.password:"demo");
 
     useEffect(() => {
     }, []);

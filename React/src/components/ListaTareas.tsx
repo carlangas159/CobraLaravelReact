@@ -10,9 +10,10 @@ import 'jquery/dist/jquery.min.js';
 import "datatables.net-dt/js/dataTables.dataTables"
 import "datatables.net-dt/css/dataTables.dataTables.min.css"
 import $ from 'jquery';
-import {axiosService, removeLog} from "../axiosService.tsx";
+import axiosService, {removeLog} from "../axiosService.tsx";
 
-const ListaTareas = () => {
+
+const ListaTareas = ({user}) => {
     const [tareas, setTareas] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
@@ -44,6 +45,12 @@ const ListaTareas = () => {
         await axiosService.delete(`/tarea/${id}`,);
         updateData();
 
+
+    };
+    const logOut = () => {
+        // Eliminar la tarea de la API
+        removeLog()
+        window.location.reload()
 
     };
 
@@ -78,7 +85,11 @@ const ListaTareas = () => {
     };
 
     return (
+
         <div className="MainDiv">
+            <h1>App Tareas</h1>
+            <p>Aquí se mostrarán las tareas.</p>
+
             <div className="container">
 
                 <button className="btn btn-primary" onClick={() => handleNewOpenModal()}>Nuevo</button>
@@ -132,6 +143,8 @@ const ListaTareas = () => {
                 </table>
                 {showModal && <DetalleTarea showModal={showModal} tarea={tareaSeleccionada} onSave={handleSave}
                                             onShowModal={setShowModal}/>}
+                <button className="btn btn-danger" onClick={() => logOut()}>Salir</button>
+
             </div>
 
 

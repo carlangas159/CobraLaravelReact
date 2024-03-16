@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-    Route::resource('tarea', TareaController::class)->only([
+    Route::middleware('auth:sanctum')->resource('tarea', TareaController::class)->only([
                                                                'index',
                                                                'update',
                                                                'store',
