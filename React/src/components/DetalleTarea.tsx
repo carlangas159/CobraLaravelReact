@@ -1,14 +1,15 @@
-﻿import React, {useState} from 'react';
+﻿// @ts-ignore
+import React, {useState} from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {Tarea} from "../storage/Tareas.tsx";
 
+// @ts-ignore
 const DetalleTarea = ({tarea,showModal, onSave,onShowModal}) => {
-    const [id, setId] = useState(tarea!==null ? tarea.id : 0);
+    const [id, setId] =useState(tarea!==null ? tarea.id : 0);
     const [title, setTitle] = useState(tarea!==null ? tarea.title:"");
     const [description, setDescription] = useState(tarea!==null ? tarea.description:"");
     const [completed, setCompleted] = useState(tarea!==null ? tarea.completed:false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e:any) => {
         e.preventDefault();
 
         const updatedTarea = {

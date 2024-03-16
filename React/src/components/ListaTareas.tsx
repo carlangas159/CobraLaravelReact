@@ -1,4 +1,5 @@
-﻿import React, {useEffect, useState} from 'react';
+﻿// @ts-ignore
+import React, {useEffect, useState} from 'react';
 import DetalleTarea from "./DetalleTarea.tsx";
 
 
@@ -18,10 +19,11 @@ const ListaTareas = () => {
 
 
     const updateData = () => {
+        // @ts-ignore
         axiosService.get('/tarea')
             .then((response) => {
                 setTareas(response.data);
-
+                // @ts-ignore
             }).catch(err => {
             removeLog();
         })
@@ -31,6 +33,7 @@ const ListaTareas = () => {
         updateData();
 
         $(document).ready(function () {
+            // @ts-ignore
             $('#tblTareas').DataTable();
 
         });
@@ -52,6 +55,7 @@ const ListaTareas = () => {
 
     const handleOpenModal = (tarea: iTarea) => {
         setShowModal(true);
+        // @ts-ignore
         setTareaSeleccionada(tarea);
 
     };

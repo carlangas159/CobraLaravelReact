@@ -1,8 +1,8 @@
 import './App.css'
 import ListaTareas from "./components/ListaTareas.tsx";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// @ts-ignore
 import React, {useEffect, useState} from "react";
-import {axiosService} from "./axiosService.tsx";
 import Login from "./components/Login.tsx";
 function App() {
     const [user, setUser] = useState({email:"",password:"",token:""});

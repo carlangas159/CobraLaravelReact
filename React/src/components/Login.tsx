@@ -1,4 +1,5 @@
-﻿import React, {useEffect, useState} from 'react';
+﻿// @ts-ignore
+import React, {useEffect, useState} from 'react';
 
 import 'jquery/dist/jquery.min.js';
 import axios from "axios";
@@ -6,16 +7,17 @@ import {axiosService, removeLog} from "../axiosService.tsx";
 
 //Datatable Modules
 
+// @ts-ignore
 const Login = ({user, setUser,checkUser,readUser}) => {
     // const [user, setUser] = useState((new User()));
 
     const [email, setEmail] = useState(user!==null ? user.email:"");
     const [password, setPassword] = useState(user!==null ? user.password:"");
-    
+
     useEffect(() => {
     }, []);
 
-    const handleSave = async (e) => {
+    const handleSave = async (e:any) => {
         e.preventDefault();
 
         await axios.post(`http://localhost:8000/api/login`, {
@@ -26,8 +28,10 @@ const Login = ({user, setUser,checkUser,readUser}) => {
                 let t = r.data;
                 console.error(t)
                 localStorage.setItem('user',JSON.stringify(t))
-                localStorage.setItem('token',JSON.stringify(t.token));
-                 getSanctum();
+                localStorage.setItem('token',(t.token));
+                localStorage.setItem('XSRF-TOKEN', t.token)
+                readUser();
+                 // getSanctum();
 
             }).catch(er =>{
                 let r = er.response
@@ -42,19 +46,13 @@ const Login = ({user, setUser,checkUser,readUser}) => {
 
 
     };
+    // @ts-ignore
     const getSanctum = async ()=>{
-        axiosService.defaults.headers = {
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        }
-        const response = await axiosService.get('http://localhost:8000/sanctum/csrf-cookie');
-        console.error(response)
+        const response = await axiosService.get('/sanctum/csrf-cookie');
         localStorage.setItem('XSRF-TOKEN', response.data.csrf_token)
-
-        axiosService.defaults.headers = {
-            'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            'X-XSRF-TOKEN': localStorage.getItem('XSRF-TOKEN'),
-        }
+        localStorage.setItem('XSRF-TOKEN', response.data.csrf_token)
         readUser();
+
     }
 
 
@@ -77,7 +75,7 @@ const Login = ({user, setUser,checkUser,readUser}) => {
 
 
                 </form>
-                
+
             </div>
         </div>
     );
