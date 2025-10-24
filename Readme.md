@@ -142,7 +142,45 @@ Ejemplo de flujo recomendado después de levantar los contenedores:
 5. `docker compose exec laravel php artisan migrate --seed`
 6. Abrir `http://localhost:5173` para el front y `http://localhost:8000` para el backend.
 
-Si quieres que ajuste alguna variable (por ejemplo usar otra contraseña para MySQL) o prefieres usar `postgres` en lugar de `mysql`, dímelo y lo adapto.
+ 
+# Resumen del proyecto
+
+Aplicación full‑stack desacoplada: backend REST en Laravel (PHP) para autenticación y CRUD de tareas, y frontend en React (TypeScript + Vite) que se ejecuta como proceso separado y consume la API para login y listado paginado de tareas. La solución está dockerizada (MySQL, Laravel, React/Nginx) para desarrollo y despliegue reproducible.
+
+## Tecnologías principales
+
+- Backend: Laravel (PHP 8.x), Eloquent, Composer
+- Frontend: React, TypeScript, Vite, Axios, Bootstrap, react-data-table-component
+- Base de datos: MySQL (migrations + seeders)
+- Contenerización: Docker, Docker Compose, Nginx (para servir la build de React)
+
+## Arquitectura y diseño
+
+- Arquitectura desacoplada (frontend y backend son procesos independientes comunicándose vía API REST). Esto facilita despliegue independiente, escalado horizontal y evolución hacia microservicios (`auth-service`, `tasks-service`) si se requiere.
+- Backend stateless (posible uso de Redis para cache/sesiones en despliegue), preparación para balanceo de carga y réplicas.
+- Frontend servido por Nginx en producción (multi‑stage build) para rendimiento y proxy a la API para `/api` y `/sanctum`.
+
+## Despliegue y comandos rápidos
+
+(Ya existe una sección Docker más abajo; aquí un resumen rápido)
+
+- Levantar servicios (construir imágenes):
+
+```
+docker compose up -d --build
+```
+
+- Ejecutar migraciones y seeders dentro del contenedor Laravel:
+
+```
+docker compose exec laravel php artisan migrate --seed
+```
+
+- Instalar dependencias de React dentro del contenedor (si es necesario):
+
+```
+docker compose run --rm react npm install
+```
 
 # Otros
 

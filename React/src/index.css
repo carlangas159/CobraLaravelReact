@@ -54,6 +54,52 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Estilos para el contenedor principal de la app (ajustable) */
+.MainDiv {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* Ajustes para react-data-table-component */
+.rdt_Table {
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.rdt_TableHeadRow {
+  background: rgba(255,255,255,0.03);
+}
+.rdt_TableHeadCell {
+  font-weight: 600;
+  padding: 12px 16px;
+  color: inherit;
+}
+.rdt_TableRow {
+  transition: background-color 0.12s ease;
+}
+.rdt_TableRow:hover {
+  background: rgba(255,255,255,0.02);
+}
+.rdt_Pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Inputs y selects pequeños coherentes con Bootstrap */
+.form-control-sm {
+  height: calc(1.5em + .5rem + 2px);
+}
+.form-select-sm {
+  height: calc(1.5em + .5rem + 2px);
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
