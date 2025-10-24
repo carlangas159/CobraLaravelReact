@@ -1,0 +1,53 @@
+# .editorconfig para el proyecto CobraLaravelReact
+# Forzar codificación UTF-8 sin BOM y normalizar finales de línea (LF)
+# Guardar en la raíz del proyecto.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# No eliminar espacios finales en archivos de documentación
+[*.{md,txt}]
+trim_trailing_whitespace = false
+
+# Shell scripts y PowerShell - usar LF
+[*.{sh,ps1}]
+end_of_line = lf
+charset = utf-8
+
+# Archivos de código front/back
+[*.{js,jsx,ts,tsx,css,scss,html,json,xml,yml,yaml,conf}]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+
+# Archivos binarios o generados (evitar que editor los trate como texto)
+[*.png]
+binary = true
+[*.jpg]
+binary = true
+[*.jpeg]
+binary = true
+[*.gif]
+binary = true
+
+# Composer / vendor (no procesar)
+[vendor/**]
+binary = true
+
+# Dockerfiles y scripts
+[Dockerfile]
+charset = utf-8
+end_of_line = lf
+
+# Notas:
+# - PhpStorm respeta `.editorconfig`; asegúrate en PhpStorm > Settings > Editor > File Encodings que el proyecto use UTF-8.
+# - Este archivo ayuda a evitar BOM y finales de línea CRLF inesperados.
+

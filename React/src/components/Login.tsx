@@ -1,4 +1,4 @@
-﻿// @ts-ignore
+// @ts-ignore
 import React, {useEffect, useState} from 'react';
 
 import 'jquery/dist/jquery.min.js';

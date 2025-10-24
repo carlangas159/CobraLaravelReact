@@ -1,4 +1,4 @@
-﻿// @ts-ignore
+// @ts-ignore
 import React, {useEffect, useState} from 'react';
 import DetalleTarea from "./DetalleTarea.tsx";
 
@@ -12,24 +12,59 @@ import "datatables.net-dt/css/dataTables.dataTables.min.css"
 import $ from 'jquery';
 import axiosService, {removeLog} from "../axiosService.tsx";
 
+/**
+ * Interfaz para el usuario (sólo los campos que usamos en este componente).
+ */
+interface IUser {
+    id?: number;
+    name?: string;
+    email?: string;
+}
 
-const ListaTareas = ({user}) => {
-    const [tareas, setTareas] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
+/**
+ * Props del componente ListaTareas
+ */
+interface IProps {
+    user?: IUser;
+}
 
+/**
+ * Componente ListaTareas
+ *
+ * Muestra una lista de tareas obtenidas desde la API y permite CRUD básico.
+ *
+ * Ejemplos de uso:
+ * 1) <ListaTareas />
+ * 2) <ListaTareas user={{ id: 1, name: 'Juan', email: 'juan@ejemplo.com' }} />
+ * 3) <ListaTareas user={userObject} />
+ */
+const ListaTareas: React.FC<IProps> = ({user}) => {
+    const [tareas, setTareas] = useState<iTarea[]>([]);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [tareaSeleccionada, setTareaSeleccionada] = useState<iTarea | null>(null);
 
+    /**
+     * updateData
+     *
+     * Obtiene la lista de tareas desde la API y actualiza el estado.
+     *
+     * Ejemplos de uso:
+     * 1) updateData(); // fuerza recarga desde la API
+     * 2) useEffect(() => { updateData(); }, []); // uso en efecto
+     * 3) onRefreshButtonClick -> updateData(); // desde un evento
+     */
     const updateData = () => {
         // @ts-ignore
         axiosService.get('/tarea')
             .then((response) => {
-                setTareas(response.data);
+                setTareas(response.data as iTarea[]);
                 // @ts-ignore
             }).catch(err => {
             removeLog();
         })
         ;
     };
+
     useEffect(() => {
         updateData();
 
@@ -40,54 +75,98 @@ const ListaTareas = ({user}) => {
         });
     }, []);
 
+    /**
+     * handleDelete
+     *
+     * Elimina una tarea por id y refresca la lista.
+     *
+     * Ejemplos de uso:
+     * 1) handleDelete(5); // elimina la tarea con id 5
+     * 2) onClick -> handleDelete(item.id) // desde un botón
+     * 3) await handleDelete(10) // uso asíncrono
+     *
+     * @param id - identificador de la tarea a eliminar
+     */
     const handleDelete = async (id: number) => {
-        // Eliminar la tarea de la API
-        await axiosService.delete(`/tarea/${id}`,);
+        await axiosService.delete(`/tarea/${id}`);
         updateData();
-
-
     };
+
+    /**
+     * logOut
+     *
+     * Cierra sesión (elimina token) y recarga la página.
+     *
+     * Ejemplos de uso:
+     * 1) <button onClick={logOut}>Salir</button>
+     * 2) if (sessionExpired) logOut();
+     * 3) onLogout -> logOut();
+     */
     const logOut = () => {
-        // Eliminar la tarea de la API
         removeLog()
         window.location.reload()
-
     };
 
+    /**
+     * handleNewOpenModal
+     *
+     * Prepara el modal para crear una nueva tarea.
+     *
+     * Ejemplos de uso:
+     * 1) onClick -> handleNewOpenModal()
+     * 2) crearNuevo() -> handleNewOpenModal()
+     * 3) showDialog -> handleNewOpenModal()
+     */
     const handleNewOpenModal = () => {
         setShowModal(true);
         setTareaSeleccionada(null);
-
     };
 
+    /**
+     * handleOpenModal
+     *
+     * Abre el modal para editar una tarea existente.
+     *
+     * Ejemplos de uso:
+     * 1) onClick -> handleOpenModal(item)
+     * 2) editItem(item) -> handleOpenModal(item)
+     * 3) mostrarDetalle -> handleOpenModal(tarea)
+     *
+     * @param tarea - tarea que se va a editar
+     */
     const handleOpenModal = (tarea: iTarea) => {
         setShowModal(true);
-        // @ts-ignore
         setTareaSeleccionada(tarea);
-
     };
 
+    /**
+     * handleSave
+     *
+     * Crea o actualiza una tarea según su id y refresca la lista.
+     *
+     * Ejemplos de uso:
+     * 1) await handleSave({ id: 0, title: 'Nueva', description: '', completed: false })
+     * 2) await handleSave(tareaModificada)
+     * 3) onSubmit -> handleSave(tarea)
+     *
+     * @param tarea - objeto iTarea a persistir
+     */
     const handleSave = async (tarea: iTarea) => {
-        // Actualizar la tarea en la API
         if (tarea.id > 0){
-
             await axiosService.put(`/tarea/${tarea.id}`, tarea);
         }else{
-
             await axiosService.post(`/tarea`, tarea);
         }
 
         updateData();
-
-        // Cerrar el modal
         setShowModal(false);
-
     };
 
     return (
 
         <div className="MainDiv">
             <h1>App Tareas</h1>
+            {user && user.name && <p>Bienvenido, {user.name}</p>}
             <p>Aquí se mostrarán las tareas.</p>
 
             <div className="container">

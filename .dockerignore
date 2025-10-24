@@ -1,0 +1,10 @@
+# Ignorar dependencias y archivos locales
+node_modules
+vendor
+.env
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/public/hot
+npm-debug.log
+.DS_Store
