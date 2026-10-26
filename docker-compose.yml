@@ -47,6 +47,15 @@ services:
     depends_on:
       - laravel
 
+  angular:
+    build:
+      context: ./Angular
+      dockerfile: Dockerfile
+    ports:
+      - "5174:80"
+    depends_on:
+      - laravel
+
 volumes:
   db_data: {}
   laravel_vendor: {}
